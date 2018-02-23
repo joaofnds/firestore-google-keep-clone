@@ -39,5 +39,37 @@ export default {
 </script>
 
 <style>
+.mdl-layout__header {
+  box-shadow: none;
+}
 
+.mdl-layout__header-row i {
+  margin-right: 10px;
+}
+
+.mdl-layout__content {
+  background-color: #e8e8e8;
+  padding: 6px 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+header .mdl-menu__container.is-upgraded.is-visible {
+  right: 16px !important;
+  top: 48px !important;
+}
+
+#signInButton {
+  outline: none !important;
+  border: none !important;
+  user-select: none;
+  pointer-events: none;
+}
+
+#userHeaderPhoto {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
 </style>

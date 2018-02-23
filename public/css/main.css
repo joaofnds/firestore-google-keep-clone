@@ -1,6 +1,3 @@
 @import url("../lib/mdl/material.amber-blue.min.css");
-@import "reset";
-@import "header";
-@import "content";
-@import "noteEdit";
-@import "media-512";
+@import url("./_reset.css");
+@import url("./_media-512.css");

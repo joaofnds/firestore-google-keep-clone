@@ -38,5 +38,21 @@ export default {
 </script>
 
 <style>
+.mdl-grid {
+  padding: 8px 0px;
+}
 
+.mdl-cell {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: 50% 50%;
+  position: relative;
+}
+
+.v-enter-active {
+  opacity: 0;
+}
+
+.v-enter-to {
+  opacity: 1;
+}
 </style>

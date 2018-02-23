@@ -54,7 +54,7 @@ form {
   min-height: initial !important;
   min-width: initial !important;
   width: auto !important;
-  margin: 0px auto;
+  margin: 16px auto;
   max-width: 512px;
   font-weight: 600;
 }
