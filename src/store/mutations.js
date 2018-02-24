@@ -3,7 +3,7 @@ export default {
     state.notes.push(note);
   },
 
-  REMOVE_NOTE(state, index) {
+  DELETE_NOTE(state, index) {
     state.notes.splice(index, 1);
   },
 

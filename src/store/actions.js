@@ -3,8 +3,8 @@ export default {
     context.commit("ADD_NOTE", note);
   },
 
-  removeNote(context, index) {
-    context.commit("REMOVE_NOTE", index);
+  deleteNote(context, index) {
+    context.commit("DELETE_NOTE", index);
   },
 
   editNote(context, { index, note }) {
