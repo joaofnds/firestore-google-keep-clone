@@ -15,7 +15,7 @@ export default {
     };
   },
 
-  ready() {
+  mounted() {
     this.resize(this.$refs.textArea);
   },
 

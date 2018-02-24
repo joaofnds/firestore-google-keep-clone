@@ -18,7 +18,7 @@
 export default {
   props: ["noteindex", "notetitle", "notebody"],
 
-  ready() {
+  mounted() {
     this.$nextTick(() => {
       componentHandler.upgradeDom();
     });
