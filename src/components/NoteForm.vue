@@ -33,6 +33,7 @@ export default {
       });
       this.title = this.body = "";
     },
+
     resize: function(t) {
       var offset = !window.opera
         ? t.offsetHeight - t.clientHeight

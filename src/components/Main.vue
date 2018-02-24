@@ -14,22 +14,28 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import Note from "./Note";
 import NoteForm from "./NoteForm";
 
 export default {
   name: "Main",
+
   components: { Note, NoteForm },
+
   computed: {
     ...mapState({
       notes: state => state.notes
     })
   },
+
   methods: {
-    createNote() {
-      alert("TODO");
+    ...mapActions(['addNote']),
+
+    createNote(note) {
+      this.addNote(note)
     },
+
     leave() {
       alert("TODO");
     }
