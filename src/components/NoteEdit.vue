@@ -1,10 +1,10 @@
 <template>
-  <div id='noteEditObfuscator' :class="{ 'is-visible': editMode }" class="noteEditMode" @click='cancelUpdateNote($event)'>
-    <button id='noteEditClose' @click='cancelUpdateNote($event)' class="cancelButton mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
-      <i class="material-icons" >close</i>
+  <div :class="{ 'is-visible': isVisible }" class="noteEditMode" @click='cancelUpdateNote($event)' data-should-cancel >
+    <button id='noteEditClose' data-should-cancel class="cancelButton mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
+      <i class="material-icons" data-should-cancel>close</i>
     </button>
-    <NoteForm ref='editForm' @newnote='updateNote'></NoteForm>
-    <span class="hint">Click outside to cancel</span>
+    <NoteForm ref='editForm' :note='note' @submit='updateNote'></NoteForm>
+    <span class="hint" data-should-cancel>Click outside to cancel</span>
   </div>
 </template>
 
@@ -13,8 +13,24 @@ import NoteForm from "./NoteForm";
 
 export default {
   name: "NoteEdit",
+
+  props: ["isVisible", "note"],
+
   components: {
     NoteForm
+  },
+
+  methods: {
+    updateNote(note) {
+      this.$emit("update", note);
+      this.$emit("cancel")
+    },
+
+    cancelUpdateNote(e) {
+      if (e.target.dataset.shouldCancel != undefined) {
+        this.$emit("cancel", e)
+      }
+    }
   }
 };
 </script>

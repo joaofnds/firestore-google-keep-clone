@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="createNote" id="createNoteForm" class="mdl-card mdl-shadow--2dp">
+  <form @submit.prevent="handleSubmit" id="createNoteForm" class="mdl-card mdl-shadow--2dp">
     <input class="noteTitle" type="text" v-model="title" name="title" placeholder="Title" required=""/>
     <textarea class="noteBody" v-model="body" name="body" placeholder="Take a note..." rows="1" required="" ref="textArea"></textarea>
     <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--grey-800" id="submitButton">Done</button>
@@ -8,6 +8,8 @@
 
 <script>
 export default {
+  props: ["note"],
+
   data() {
     return {
       title: "",
@@ -22,15 +24,28 @@ export default {
   watch: {
     body: function() {
       this.resize(this.$refs.textArea);
+    },
+
+    note: function(note) {
+      if (note) {
+        this.title = this.note.title
+        this.body = this.note.body
+      } else {
+        this.resetFields()
+      }
     }
   },
 
   methods: {
-    createNote: function() {
-      this.$emit("newnote", {
+    handleSubmit: function() {
+      this.$emit("submit", {
         title: this.title.trim(),
         body: this.body.trim()
       });
+      this.resetFields()
+    },
+
+    resetFields() {
       this.title = this.body = "";
     },
 
