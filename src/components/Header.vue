@@ -25,14 +25,38 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
+import { signIn, signOut } from "../firebase/auth";
 
 export default {
   name: "Header",
+
   computed: mapState(["user"]),
+
+  watch: {
+    user() {
+      this.$nextTick(() => {
+        componentHandler.upgradeDom();
+      });
+    }
+  },
+
   methods: {
+    ...mapActions(["setUser", "unsetUser"]),
     signIn() {
-      alert("todo");
+      signIn()
+        .then(({ user }) => {
+          if (!user) throw new Error("No user");
+
+          this.setUser(user);
+        })
+        .catch(console.error);
+    },
+
+    signOut() {
+      signOut()
+        .then(this.unsetUser)
+        .catch(console.error)
     }
   }
 };
