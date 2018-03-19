@@ -1,14 +1,33 @@
+import {
+  setNote as setFirebaseNote,
+  deleteNote as deleteFirebaseNote
+} from "../firebase/notes";
+
 export default {
-  addNote(context, note) {
-    context.commit("ADD_NOTE", note);
+  setNotes(context, notes) {
+    context.commit("SET_NOTES", notes);
   },
 
-  deleteNote(context, index) {
-    context.commit("DELETE_NOTE", index);
+  setNote(context, { noteID, note }) {
+    const userID = context.state.user.uid;
+    setFirebaseNote(userID, noteID, note)
+      .then(() => {
+        context.commit("ADD_NOTE", { noteID, note });
+      })
+      .catch(err => {
+        throw new Error("Failed to save note to firebase", err);
+      });
   },
 
-  editNote(context, { index, note }) {
-    context.commit("EDIT_NOTE", { index, note });
+  deleteNote(context, noteID) {
+    const userID = context.state.user.uid;
+    deleteFirebaseNote(userID, noteID)
+      .then(() => {
+        context.commit("DELETE_NOTE", noteID);
+      })
+      .catch(err => {
+        throw new Error("Failed to delete note", err);
+      });
   },
 
   setUser(context, user) {
