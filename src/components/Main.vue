@@ -1,19 +1,20 @@
 <template>
   <main class="mdl-layout__content">
-    <NoteForm @submit='addNote'></NoteForm>
+    <NoteForm @submit='setNote'></NoteForm>
     <transition-group @leave='leave' tag='div' class='mdl-grid'>
-      <Note v-for='(note, index) in notes'
-          :noteindex='index'
-          :notetitle='note.title'
-          :notebody='note.body'
-          :key='index'
+      <Note v-for='(note, noteID) in notes'
+          :noteID='noteID'
+          :noteTitle='note.title'
+          :noteBody='note.body'
+          :key='noteID'
           @delete='deleteNote'
-          @edit='setEditMode'/>
+          @edit='setEditing'/>
     </transition-group>
 
     <NoteEdit
-      :isVisible='editMode'
-      :note='notes[editNoteIndex]'
+      :isVisible='isEditing'
+      :note='notes[editNoteID]'
+      :noteID='editNoteID'
       @update='handleEditNote'
       @cancel='cancelEdit'
     />
@@ -33,8 +34,8 @@ export default {
 
   data() {
     return {
-      editMode: false,
-      editNoteIndex: 0
+      isEditing: false,
+      editNoteID: 0
     };
   },
 
@@ -45,22 +46,21 @@ export default {
   },
 
   methods: {
-    ...mapActions(["addNote", "editNote", "deleteNote"]),
+    ...mapActions(["setNote", "deleteNote"]),
 
-    setEditMode(index) {
-      this.editNoteIndex = index;
-      this.editMode = true;
+    setEditing(noteID) {
+      this.editNoteID = noteID;
+      this.isEditing = true;
     },
 
-    handleEditNote(note) {
-      this.editNote({ index: this.editNoteIndex, note });
-      this.editNoteIndex = 0;
-      this.editMode = false;
+    handleEditNote({ noteID, note }) {
+      this.setNote({ noteID, note });
+      this.cancelEdit();
     },
 
     cancelEdit() {
-      this.editMode = false;
-      this.editNoteIndex = null;
+      this.editNoteID = null;
+      this.isEditing = false;
     },
 
     leave(el) {

@@ -3,7 +3,7 @@
     <button id='noteEditClose' data-should-cancel class="cancelButton mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
       <i class="material-icons" data-should-cancel>close</i>
     </button>
-    <NoteForm ref='editForm' :note='note' @submit='updateNote'></NoteForm>
+    <NoteForm ref='editForm' :noteID='noteID' :note='note' @submit='updateNote'></NoteForm>
     <span class="hint" data-should-cancel>Click outside to cancel</span>
   </div>
 </template>
@@ -14,21 +14,21 @@ import NoteForm from "./NoteForm";
 export default {
   name: "NoteEdit",
 
-  props: ["isVisible", "note"],
+  props: ["isVisible", "noteID", "note"],
 
   components: {
     NoteForm
   },
 
   methods: {
-    updateNote(note) {
-      this.$emit("update", note);
-      this.$emit("cancel")
+    updateNote({ noteID, note }) {
+      this.$emit("update", { noteID, note });
+      this.$emit("cancel");
     },
 
     cancelUpdateNote(e) {
       if (e.target.dataset.shouldCancel != undefined) {
-        this.$emit("cancel", e)
+        this.$emit("cancel", e);
       }
     }
   }
