@@ -7,11 +7,14 @@
 </template>
 
 <script>
+import { guid } from "../common/guid";
+
 export default {
-  props: ["note"],
+  props: ["noteID", "note"],
 
   data() {
     return {
+      id: "",
       title: "",
       body: ""
     };
@@ -19,6 +22,7 @@ export default {
 
   mounted() {
     this.resize(this.$refs.textArea);
+    this.id = guid();
   },
 
   watch: {
@@ -26,12 +30,16 @@ export default {
       this.resize(this.$refs.textArea);
     },
 
+    noteID: function() {
+      this.id = this.noteID;
+    },
+
     note: function(note) {
       if (note) {
-        this.title = this.note.title
-        this.body = this.note.body
+        this.title = this.note.title;
+        this.body = this.note.body;
       } else {
-        this.resetFields()
+        this.resetFields();
       }
     }
   },
@@ -39,13 +47,17 @@ export default {
   methods: {
     handleSubmit: function() {
       this.$emit("submit", {
-        title: this.title.trim(),
-        body: this.body.trim()
+        noteID: this.id,
+        note: {
+          title: this.title.trim(),
+          body: this.body.trim()
+        }
       });
-      this.resetFields()
+      this.resetFields();
     },
 
     resetFields() {
+      this.id = guid();
       this.title = this.body = "";
     },
 
