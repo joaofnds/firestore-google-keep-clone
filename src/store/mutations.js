@@ -1,14 +1,23 @@
 export default {
-  ADD_NOTE(state, note) {
-    state.notes.push(note);
+  SET_NOTES(state, notes) {
+    state.notes = notes;
   },
 
-  DELETE_NOTE(state, index) {
-    state.notes.splice(index, 1);
+  ADD_NOTE(state, { noteID, note }) {
+    state.notes = {
+      ...state.notes,
+      [noteID]: note
+    };
   },
 
-  EDIT_NOTE(state, { index, note }) {
-    state.notes[index] = note;
+  DELETE_NOTE(state, noteID) {
+    const notes = { ...state.notes };
+    delete notes[noteID];
+    state.notes = notes;
+  },
+
+  EDIT_NOTE(state, { noteID, note }) {
+    state.notes[noteID] = note;
   },
 
   SET_USER(state, user) {
