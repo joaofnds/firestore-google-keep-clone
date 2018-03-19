@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--no-drawer-button mdl-layout--no-desktop-drawer-button">
-    <Header />
+    <Header @signIn='handleSignIn' @signOut='handleSignOut' />
     <Main />
     <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
       <div class="mdl-snackbar__text"></div>
@@ -10,14 +10,57 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import Header from "./components/Header";
 import Main from "./components/Main";
+import { signIn, signOut } from "./firebase/auth";
+import { getAllNotes } from "./firebase/notes";
 
 export default {
   name: "app",
-  components: { Header, Main }
+  components: { Header, Main },
+
+  methods: {
+    ...mapActions(["setNotes", "setUser", "unsetUser"]),
+
+    handleSignIn() {
+      signIn()
+        .then(({ user }) => {
+          if (!user) throw new Error("No user");
+          this.setUser(user);
+
+          getAllNotes(user.uid).then(querySnap => {
+            const notes = this.getNotesFromQuerySnap(querySnap);
+            this.setNotes(notes);
+          });
+        })
+        .catch(err => {
+          throw new Error(err);
+        });
+    },
+
+    handleSignOut() {
+      signOut()
+        .then(this.unsetUser)
+        .catch(err => {
+          throw new Error(err);
+        });
+    },
+
+    getNotesFromQuerySnap(querySnap) {
+      const notes = {};
+      querySnap.forEach(doc => {
+        notes[doc.id] = {
+          id: doc.id,
+          ...doc.data()
+        };
+      });
+      return notes;
+    }
+  }
 };
 </script>
 
 <style>
+
 </style>

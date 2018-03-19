@@ -25,8 +25,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import { signIn, signOut } from "../firebase/auth";
+import { mapState } from "vuex";
 
 export default {
   name: "Header",
@@ -42,21 +41,12 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setUser", "unsetUser"]),
     signIn() {
-      signIn()
-        .then(({ user }) => {
-          if (!user) throw new Error("No user");
-
-          this.setUser(user);
-        })
-        .catch(console.error);
+      this.$emit("signIn")
     },
 
     signOut() {
-      signOut()
-        .then(this.unsetUser)
-        .catch(console.error)
+      this.$emit("signOut")
     }
   }
 };
