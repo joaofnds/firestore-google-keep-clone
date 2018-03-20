@@ -15,6 +15,7 @@ import Header from "./components/Header";
 import Main from "./components/Main";
 import { signIn, signOut } from "./firebase/auth";
 import { getAllNotes } from "./firebase/notes";
+import showNotification from "./common/showNotification";
 
 export default {
   name: "app",
@@ -29,6 +30,8 @@ export default {
           if (!user) throw new Error("No user");
           this.setUser(user);
 
+          showNotification("Logged in!");
+
           getAllNotes(user.uid).then(querySnap => {
             const notes = this.getNotesFromQuerySnap(querySnap);
             this.setNotes(notes);
@@ -41,7 +44,10 @@ export default {
 
     handleSignOut() {
       signOut()
-        .then(this.unsetUser)
+        .then(() => {
+          showNotification("Logged out!");
+          this.unsetUser();
+        })
         .catch(err => {
           throw new Error(err);
         });
