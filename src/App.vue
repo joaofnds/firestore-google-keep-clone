@@ -47,6 +47,7 @@ export default {
         .then(() => {
           showNotification("Logged out!");
           this.unsetUser();
+          this.setNotes({});
         })
         .catch(err => {
           throw new Error(err);
