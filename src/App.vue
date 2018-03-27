@@ -22,7 +22,7 @@ export default {
   components: { Header, Main },
 
   methods: {
-    ...mapActions(["setNotes", "setUser", "unsetUser"]),
+    ...mapActions(["mergeNotes", "setUser", "unsetUser"]),
 
     handleSignIn() {
       signIn()
@@ -34,7 +34,7 @@ export default {
 
           getAllNotes(user.uid).then(querySnap => {
             const notes = this.getNotesFromQuerySnap(querySnap);
-            this.setNotes(notes);
+            this.mergeNotes(notes);
           });
         })
         .catch(err => {
