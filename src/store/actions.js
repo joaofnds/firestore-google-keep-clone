@@ -10,8 +10,7 @@ export function setNotes(context, notes) {
 }
 
 export function mergeNotes(context, notes) {
-  const stateNotes = context.state.notes;
-  const user = context.state.user;
+  const { user, notes: stateNotes } = context.state;
   if (user) {
     for (let noteID in stateNotes) {
       setFirebaseNote(user.uid, noteID, stateNotes[noteID]);
@@ -27,18 +26,17 @@ export function setNote(context, { noteID, note }) {
   // Set note to firestore
   const { user } = context.state;
   if (user) {
-    const userID = user.uid;
-    setFirebaseNote(userID, noteID, note)
+    setFirebaseNote(user.uid, noteID, note)
       .then(() => showNotification("Note saved"))
       .catch(err => {
-        showNotification("Failed to save note on Firestore");
+        showNotification("Failed to save note to Firestore");
         throw new Error("Failed to save note to firebase", err);
       });
   }
 }
 
 export function deleteNote(context, noteID) {
-  const note = context.state.notes[noteID];
+  const { notes: { [noteID]: note } } = context.state;
 
   // Commit changes to state
   context.commit("DELETE_NOTE", noteID);
@@ -46,11 +44,11 @@ export function deleteNote(context, noteID) {
   // Delete note from firestore
   const { user } = context.state;
   if (user) {
-    const userID = user.uid;
-    deleteFirebaseNote(userID, noteID)
+    deleteFirebaseNote(user.uid, noteID)
       .then()
       .catch(err => {
-        throw new Error("Failed to delete note", err);
+        showNotification("Failed to delete note from Firestore");
+        throw new Error("Failed to delete note from Firestore", err);
       });
   }
 
