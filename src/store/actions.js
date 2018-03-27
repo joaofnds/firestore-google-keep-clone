@@ -9,6 +9,17 @@ export function setNotes(context, notes) {
   context.commit("SET_NOTES", notes);
 }
 
+export function mergeNotes(context, notes) {
+  const stateNotes = context.state.notes;
+  const user = context.state.user;
+  if (user) {
+    for (let noteID in stateNotes) {
+      setFirebaseNote(user.uid, noteID, stateNotes[noteID]);
+    }
+  }
+  setNotes(context, { ...stateNotes, ...notes });
+}
+
 export function setNote(context, { noteID, note }) {
   // Commit changes to state
   context.commit("ADD_NOTE", { noteID, note });
@@ -59,6 +70,7 @@ export function unsetUser(context) {
 
 export default {
   setNotes,
+  mergeNotes,
   setNote,
   deleteNote,
   setUser,
