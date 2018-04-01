@@ -13,8 +13,6 @@
 import { mapActions } from "vuex";
 import Header from "./components/Header";
 import Main from "./components/Main";
-import { signIn, signOut } from "./firebase/auth";
-import { getAllNotes } from "./firebase/notes";
 import showNotification from "./common/showNotification";
 
 export default {
@@ -25,45 +23,12 @@ export default {
     ...mapActions(["mergeNotes", "setUser", "unsetUser"]),
 
     handleSignIn() {
-      signIn()
-        .then(({ user }) => {
-          if (!user) throw new Error("No user");
-          this.setUser(user);
-
-          showNotification("Logged in!");
-
-          getAllNotes(user.uid).then(querySnap => {
-            const notes = this.getNotesFromQuerySnap(querySnap);
-            this.mergeNotes(notes);
-          });
-        })
-        .catch(err => {
-          throw new Error(err);
-        });
+      showNotification("Not implemented yet!");
     },
 
     handleSignOut() {
-      signOut()
-        .then(() => {
-          showNotification("Logged out!");
-          this.unsetUser();
-          this.setNotes({});
-        })
-        .catch(err => {
-          throw new Error(err);
-        });
+      showNotification("Not implemented yet!");
     },
-
-    getNotesFromQuerySnap(querySnap) {
-      const notes = {};
-      querySnap.forEach(doc => {
-        notes[doc.id] = {
-          id: doc.id,
-          ...doc.data()
-        };
-      });
-      return notes;
-    }
   }
 };
 </script>

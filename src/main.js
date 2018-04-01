@@ -1,7 +1,5 @@
 import Vue from "vue";
 
-import "./firebase/main";
-
 import App from "./App.vue";
 import store from "./store/store";
 
