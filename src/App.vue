@@ -14,6 +14,7 @@ import { mapActions } from "vuex";
 import Header from "./components/Header";
 import Main from "./components/Main";
 import showNotification from "./common/showNotification";
+import { signIn, signOut } from "./firebase/auth";
 
 export default {
   name: "app",
@@ -23,12 +24,29 @@ export default {
     ...mapActions(["mergeNotes", "setUser", "unsetUser"]),
 
     handleSignIn() {
-      showNotification("Not implemented yet!");
+      signIn()
+        .then(({ user }) => {
+          if (!user) throw new Error("No user");
+
+          this.setUser(user);
+
+          showNotification("Logged in!");
+        })
+        .catch(err => {
+          throw new Error(err);
+        });
     },
 
     handleSignOut() {
-      showNotification("Not implemented yet!");
-    },
+      signOut()
+        .then(() => {
+          showNotification("Logged out!")
+          this.unsetUser();
+        })
+        .catch(err => {
+          throw new Error(err);
+        });
+    }
   }
 };
 </script>
