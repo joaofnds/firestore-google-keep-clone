@@ -1,4 +1,5 @@
 import showNotification from "../common/showNotification";
+import { setNote as setFirestoreNote } from "../firebase/notes";
 
 export function setNotes(context, notes) {
   context.commit("SET_NOTES", notes);
@@ -12,6 +13,17 @@ export function mergeNotes(context, notes) {
 export function setNote(context, { noteID, note }) {
   // Commit changes to state
   context.commit("ADD_NOTE", { noteID, note });
+
+  // Set note to firestore
+  const { user } = context.state;
+  if (user) {
+    setFirestoreNote(user.uid, noteID, note)
+      .then(() => showNotification("Note saved"))
+      .catch(err => {
+        showNotification("Failed to save note to Firestore");
+        throw new Error("Failed to save note to Firestore", err);
+      });
+  }
 }
 
 export function deleteNote(context, noteID) {
