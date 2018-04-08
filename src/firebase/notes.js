@@ -48,3 +48,12 @@ export function getAllNotes(userID) {
 export function setNote(userID, noteID, note) {
   return noteRef(userID, noteID).set(note);
 }
+
+/**
+ * Deletes a user note
+ * @param {String} userID Self descriptive
+ * @param {String} noteID Self descriptive
+ */
+export function deleteNote(userID, noteID) {
+  return noteRef(userID, noteID).delete();
+}

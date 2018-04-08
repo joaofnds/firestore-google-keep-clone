@@ -1,5 +1,8 @@
 import showNotification from "../common/showNotification";
-import { setNote as setFirestoreNote } from "../firebase/notes";
+import {
+  setNote as setFirestoreNote,
+  deleteNote as deleteFirestoreNote
+} from "../firebase/notes";
 
 export function setNotes(context, notes) {
   context.commit("SET_NOTES", notes);
@@ -31,6 +34,17 @@ export function deleteNote(context, noteID) {
 
   // Commit changes to state
   context.commit("DELETE_NOTE", noteID);
+
+  // Delete note from firestore
+  const { user } = context.state;
+  if (user) {
+    deleteFirestoreNote(user.uid, noteID)
+      .then()
+      .catch(err => {
+        showNotification("Failed to delete note from Firestore");
+        throw new Error("Failed to delete note from Firestore", err);
+      });
+  }
 
   // Display notification
   showNotification("Note deleted", 2000, "UNDO", () => {
