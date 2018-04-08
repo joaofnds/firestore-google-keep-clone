@@ -22,7 +22,7 @@ export default {
   components: { Header, Main },
 
   methods: {
-    ...mapActions(["mergeNotes", "setUser", "unsetUser"]),
+    ...mapActions(["mergeNotes", "setNotes", "setUser", "unsetUser"]),
 
     handleSignIn() {
       signIn()
@@ -65,6 +65,7 @@ export default {
         .then(() => {
           showNotification("Logged out!");
           this.unsetUser();
+          this.setNotes({});
         })
         .catch(err => {
           throw new Error(err);
