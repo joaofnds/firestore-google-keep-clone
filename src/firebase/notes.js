@@ -71,3 +71,35 @@ export function setNote(userID, noteID, note) {
 export function addNote(userID, newNote) {
   return notesRef(userID).add(newNote);
 }
+
+/**
+ *
+ * @param {String} userID
+ */
+export function setSnapshotListener(userID, cb) {
+  notesRef(userID).onSnapshot(querySnap => {
+    const notes = getNotesFromQuerySnap(querySnap);
+    Object.keys(notes).forEach(id => {
+      const { [id]: { type, title, body } } = notes;
+      cb(type, { id, title, body });
+    });
+  });
+}
+
+/**
+ *
+ * @param {QuerySnapshot} querySnap
+ */
+export function getNotesFromQuerySnap(querySnap) {
+  const notes = {};
+
+  querySnap.docChanges.forEach(({ doc, type }) => {
+    notes[doc.id] = {
+      type,
+      id: doc.id,
+      ...doc.data()
+    };
+  });
+
+  return notes;
+}

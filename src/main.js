@@ -1,6 +1,6 @@
 import Vue from "vue";
 import { auth } from "firebase";
-import { getAllNotes } from "./firebase/notes";
+import { setSnapshotListener } from "./firebase/notes";
 import showNotification from "./common/showNotification";
 
 import "./firebase/main";
@@ -23,29 +23,33 @@ auth().onAuthStateChanged(user => {
     dispatch("setUser", user);
     showNotification("Logged in!");
 
-    getAllNotes(user.uid)
-      .then(querySnap => {
-        const notes = getNotesFromQuerySnap(querySnap);
-        dispatch("mergeNotes", notes);
-      })
-      .catch(err => {
-        throw new Error(err);
-      });
+    setSnapshotListener(user.uid, (type, note) => {
+      handleQuerySnapshot(dispatch, type, note);
+    });
   } else {
     dispatch("unsetUser");
     dispatch("setNotes", {});
   }
 });
 
-function getNotesFromQuerySnap(querySnap) {
-  const notes = {};
+function handleQuerySnapshot(dispatch, type, note) {
+  switch (type) {
+    case "modified":
+    case "added":
+      dispatch("setNote", {
+        noteID: note.id,
+        note: {
+          title: note.title,
+          body: note.body
+        }
+      });
+      break;
 
-  querySnap.forEach(doc => {
-    notes[doc.id] = {
-      id: doc.id,
-      ...doc.data()
-    };
-  });
+    case "removed":
+      dispatch("deleteNote", note.id);
+      break;
 
-  return notes;
+    default:
+      break;
+  }
 }
